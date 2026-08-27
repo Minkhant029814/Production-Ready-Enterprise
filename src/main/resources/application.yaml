@@ -2,9 +2,8 @@ spring:
   application:
     name: jwtDemo
 
-
-profiles:
-  active: local
+  profiles:
+    active: local
 
 
   jpa:

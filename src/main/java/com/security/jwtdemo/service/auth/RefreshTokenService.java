@@ -27,20 +27,20 @@ public class RefreshTokenService {
 
     //Generate new Token (one user must have one token)
     @Transactional
-    public RefreshToken createRefreshToken(Long userId){
+    public RefreshToken createRefreshToken(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found with id " + userId));
+                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
 
-        //refresh token
-        refreshTokenRepository.findByUser(user).ifPresent(refreshTokenRepository::delete);
+        // Existing Token ရှိရင် Update လုပ်မည်၊ မရှိမှ Insert အသစ်လုပ်မည်
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                .orElseGet(() -> RefreshToken.builder().user(user).build());
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .user(user)
-                .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
-                .revoked(false)
-                .build();
+        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+        refreshToken.setRevoked(false);
+
         return refreshTokenRepository.save(refreshToken);
+
     }
 
     //Checking Token expired or not

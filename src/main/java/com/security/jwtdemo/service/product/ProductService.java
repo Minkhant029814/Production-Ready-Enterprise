@@ -9,6 +9,9 @@ import com.security.jwtdemo.respository.mysqlRepository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductService {
 
@@ -48,6 +51,25 @@ public class ProductService {
 
     // Fetching All products
 
+    public List<ProductResponse>  getAllProducts(){
+        List<Product> products = productRepository.findAll();
+
+        return  products.stream().map(product->{
+            ProductCatalog catalog = productCatalogRepository.findByMysqlProductId(product.getId())
+                    .orElse(new ProductCatalog());
+            return mapToProductResponse(product,catalog);
+        }).collect(Collectors.toList());
+    }
+    // get Single Product by Id
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        ProductCatalog catalog = productCatalogRepository.findByMysqlProductId(product.getId())
+                .orElse(new ProductCatalog());
+
+        return mapToProductResponse(product, catalog);
+    }
 
     // Helper Method for to combine MySQL + MongoDB to be ProductResponse DTO
     private ProductResponse mapToProductResponse(Product product,ProductCatalog catalog){
