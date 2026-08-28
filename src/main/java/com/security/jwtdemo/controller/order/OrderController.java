@@ -1,5 +1,6 @@
 package com.security.jwtdemo.controller.order;
 
+import com.security.jwtdemo.dto.api.ApiResponse;
 import com.security.jwtdemo.dto.orderDto.CreateOrderRequest;
 import com.security.jwtdemo.dto.orderDto.OrderResponse;
 import com.security.jwtdemo.entity.mysql.User;
@@ -20,10 +21,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(
+    public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
             @AuthenticationPrincipal User user,
             @RequestBody CreateOrderRequest request
-            ){
-        return ResponseEntity.ok(orderService.createOrder(user.getId(), request));
+    ) {
+        OrderResponse response = orderService.createOrder(user.getId(), request);
+        return ResponseEntity.ok(ApiResponse.success("Order created successfully", response));
     }
 }

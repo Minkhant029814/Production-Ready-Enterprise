@@ -8,6 +8,8 @@ import com.security.jwtdemo.entity.mysql.Order;
 import com.security.jwtdemo.entity.mysql.OrderItem;
 import com.security.jwtdemo.entity.mysql.OrderStatus;
 import com.security.jwtdemo.entity.mysql.Product;
+import com.security.jwtdemo.exception.BadRequestException;
+import com.security.jwtdemo.exception.ResourceNotFoundException;
 import com.security.jwtdemo.respository.mongoRepository.OrderLogRepository;
 import com.security.jwtdemo.respository.mysqlRepository.OrderRepository;
 import com.security.jwtdemo.respository.mysqlRepository.ProductRepository;
@@ -39,11 +41,11 @@ public class OrderService {
                 .build();
         for(OrderItemRequest itemRequest: request.items()){
             Product product = productRepository.findById(itemRequest.productId())
-                    .orElseThrow(()-> new RuntimeException("Product not found with ID: " + itemRequest.productId()));
+                    .orElseThrow(()-> new ResourceNotFoundException("Product not found with ID: " + itemRequest.productId()));
 
             //Checking sufficient stock level
             if(product.getStockQuantity() < itemRequest.quantity()){
-                throw new RuntimeException("Insufficient stock for product :" + product.getName());
+                throw new BadRequestException("Insufficient stock for product :" + product.getName());
             }
 
             //Reduce stock level
