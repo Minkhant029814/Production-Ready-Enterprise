@@ -2,7 +2,7 @@ package com.security.jwtdemo.service.auth;
 
 import com.security.jwtdemo.entity.mysql.RefreshToken;
 import com.security.jwtdemo.entity.mysql.User;
-import com.security.jwtdemo.respository.RefreshTokenRepository;
+import com.security.jwtdemo.respository.token.RefreshTokenRepository;
 import com.security.jwtdemo.respository.mysqlRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

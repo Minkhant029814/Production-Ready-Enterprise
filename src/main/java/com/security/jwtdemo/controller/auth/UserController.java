@@ -1,4 +1,4 @@
-package com.security.jwtdemo.controller;
+package com.security.jwtdemo.controller.auth;
 
 import com.security.jwtdemo.entity.mysql.User;
 import org.springframework.http.ResponseEntity;

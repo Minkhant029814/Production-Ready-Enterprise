@@ -1,4 +1,4 @@
-package com.security.jwtdemo.respository;
+package com.security.jwtdemo.respository.token;
 
 import com.security.jwtdemo.entity.mysql.RefreshToken;
 import com.security.jwtdemo.entity.mysql.User;

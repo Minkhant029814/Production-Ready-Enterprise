@@ -60,7 +60,7 @@ public class ProductService {
             return mapToProductResponse(product,catalog);
         }).collect(Collectors.toList());
     }
-    // get Single Product by Id
+    // get Single Product by id
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));

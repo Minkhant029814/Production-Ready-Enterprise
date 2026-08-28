@@ -25,7 +25,7 @@ public class ProductController {
             @RequestBody CreateProductRequest request,
             Authentication authentication
             ){
-        //Getting authenticated user Id from security Context
+        //Getting authenticated user id from security Context
         User currentUser = (User) authentication.getPrincipal();
         ProductResponse response = productService.createProduct(request,currentUser.getId());
         return  ResponseEntity.ok(response);
@@ -37,7 +37,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    //Get product by Id
+    //Get product by id
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id){
         return  ResponseEntity.ok(productService.getProductById(id));

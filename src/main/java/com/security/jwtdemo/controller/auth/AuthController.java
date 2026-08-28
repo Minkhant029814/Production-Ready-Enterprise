@@ -1,4 +1,4 @@
-package com.security.jwtdemo.controller;
+package com.security.jwtdemo.controller.auth;
 
 import com.security.jwtdemo.authService.JwtService;
 import com.security.jwtdemo.dto.authDto.AuthenticationRequest;
@@ -6,7 +6,7 @@ import com.security.jwtdemo.dto.authDto.AuthenticationResponse;
 import com.security.jwtdemo.dto.authDto.RefreshTokenRequest;
 import com.security.jwtdemo.dto.authDto.RegisterRequest;
 import com.security.jwtdemo.entity.mysql.RefreshToken;
-import com.security.jwtdemo.respository.RefreshTokenRepository;
+import com.security.jwtdemo.respository.token.RefreshTokenRepository;
 import com.security.jwtdemo.service.auth.RefreshTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
