@@ -24,6 +24,10 @@ public class Product {
     @Column(nullable = false)
     private Long createdByUserId;
 
+    @Version
+    @Builder.Default
+    private Long version = 0L;
+
 
 
 }
