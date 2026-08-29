@@ -26,7 +26,13 @@ public class OrderController {
             @RequestBody CreateOrderRequest request
     ) {
         idempotencyService.validateAndStoreKey(idempotencyKey);
-        OrderResponse response = orderService.createOrder(user.getId(), request);
-        return ResponseEntity.ok(ApiResponse.success("Order created successfully", response));
+        try{
+            OrderResponse response = orderService.createOrder(user.getId(), request);
+            return ResponseEntity.ok(ApiResponse.success("Order created successfully", response));
+
+        } catch (Exception ex) {
+            idempotencyService.removeKey(idempotencyKey);
+            throw  ex;
+        }
     }
 }
