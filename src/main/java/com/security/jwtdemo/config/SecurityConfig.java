@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**","/public/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/orders/**").permitAll()
                         .requestMatchers("/api/v1/users/admin-only").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

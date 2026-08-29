@@ -1,6 +1,5 @@
 package com.security.jwtdemo.service.auth;
 
-
 import com.security.jwtdemo.authService.JwtService;
 import com.security.jwtdemo.dto.authDto.AuthenticationRequest;
 import com.security.jwtdemo.dto.authDto.AuthenticationResponse;
@@ -22,14 +21,14 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final RefreshTokenService refreshTokenService; // 1. RefreshTokenService ထည့်သွင်းပါ
+    private final RefreshTokenService refreshTokenService;
 
     public AuthenticationService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             AuthenticationManager authenticationManager,
-            RefreshTokenService refreshTokenService // Inject လုပ်ပါ
+            RefreshTokenService refreshTokenService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -54,8 +53,9 @@ public class AuthenticationService {
 
         User savedUser = userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(savedUser);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser.getId()); // Refresh Token ထုတ်ယူပါ
+        // 👈 ၁။ savedUser ကိုယ်တိုင်က UserDetails ဖြစ်သလို savedUser.getId() ပါ ထည့်ပေးလိုက်ပါ
+        String jwtToken = jwtService.generateToken(savedUser, savedUser.getId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser.getId());
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -75,8 +75,9 @@ public class AuthenticationService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.email()));
 
-        String jwtToken = jwtService.generateToken(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId()); // Refresh Token ထုတ်ယူပါ
+        // 👈 ၂။ userDetails အစား user ကို ပြောင်းသုံးလိုက်ပါ
+        String jwtToken = jwtService.generateToken(user, user.getId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)

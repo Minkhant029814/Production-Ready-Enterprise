@@ -21,18 +21,27 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
-            @AuthenticationPrincipal User user,
+            @RequestHeader("X-User-Id") String userId,
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestBody CreateOrderRequest request
     ) {
         idempotencyService.validateAndStoreKey(idempotencyKey);
-        try{
-            OrderResponse response = orderService.createOrder(user.getId(), request);
+        // Controller ထဲတွင် userId မပါပါက Safe ဖြစ်အောင် စစ်ဆေးခြင်း
+        if (userId == null || userId.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID is missing or invalid from request header.");
+        }
+
+        try {
+            Long parsedUserId = Long.parseLong(userId);
+            OrderResponse response = orderService.createOrder(parsedUserId, request);
             return ResponseEntity.ok(ApiResponse.success("Order created successfully", response));
 
+        } catch (NumberFormatException ex) {
+            idempotencyService.removeKey(idempotencyKey);
+            throw new IllegalArgumentException("User ID format is invalid: " + userId);
         } catch (Exception ex) {
             idempotencyService.removeKey(idempotencyKey);
-            throw  ex;
+            throw ex;
         }
     }
 }

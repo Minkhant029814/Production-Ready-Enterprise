@@ -1,5 +1,6 @@
 package com.security.jwtdemo.authService;
 
+import com.security.jwtdemo.entity.mysql.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -55,6 +56,13 @@ public class JwtService {
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey())
                 .compact();
+    }
+
+
+    public String generateToken(UserDetails userDetails, Long userId) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userId", userId); // 👈 userId ကို JWT Claim ထဲ ထည့်သွင်းခြင်း
+        return generateTokenWith(extraClaims, userDetails);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
